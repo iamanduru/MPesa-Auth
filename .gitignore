@@ -1,0 +1,15 @@
+# Node.js dependencies
+node_modules/
+.env
+package-lock.json
+
+# Logs
+logs/
+*.log
+
+# Build files
+dist/
+build/
+
+# Ignore OS-specific files
+.DS_Store
