@@ -4,6 +4,7 @@ const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const connectDB = require("./src/config/db");
+const authRoutes = require("./src/routes/authRoutes");
 
 dotenv.config();
 connectDB();
@@ -17,5 +18,8 @@ app.use(cors());
 app.get("/", (req, res) => {
     res.send("Secure M-Pesa Authentication API Running...");
 });
+
+// ✅ Authentication Routes
+app.use("/", authRoutes);
 
 module.exports = app;
