@@ -7,7 +7,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const {
-    M_PESA_CONSUMER_KEY,
+M_PESA_CONSUMER_KEY,
   M_PESA_CONSUMER_SECRET,
   M_PESA_SHORTCODE,
   M_PESA_PASSKEY,

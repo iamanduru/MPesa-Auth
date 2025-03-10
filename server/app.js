@@ -5,6 +5,7 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const connectDB = require("./src/config/db");
 const authRoutes = require("./src/routes/authRoutes");
+const mpesaRoutes = require("./src/routes/mpesaRoutes");
 
 dotenv.config();
 connectDB();
@@ -21,5 +22,8 @@ app.get("/", (req, res) => {
 
 // ✅ Authentication Routes
 app.use("/", authRoutes);
+
+// M-Pesa Payment Routes
+app.use("/api/mpesa", mpesaRoutes);
 
 module.exports = app;
