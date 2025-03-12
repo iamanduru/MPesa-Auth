@@ -20,8 +20,8 @@ app.get("/", (req, res) => {
     res.send("Secure M-Pesa Authentication API Running...");
 });
 
-// ✅ Authentication Routes
-app.use("/", authRoutes);
+// Authentication Routes
+app.use("/api/auth", authRoutes);
 
 // M-Pesa Payment Routes
 app.use("/api/mpesa", mpesaRoutes);
