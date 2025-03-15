@@ -1,0 +1,251 @@
+:root {
+    --primary-color: #4CAF50;
+    --primary-dark: #388E3C;
+    --primary-light: #C8E6C9;
+    --accent-color: #FF5722;
+    --text-color: #333333;
+    --light-text: #757575;
+    --background-color: #F9F9F9;
+    --card-color: #FFFFFF;
+    --danger-color: #F44336;
+    --success-color: #4CAF50;
+    --animation-duration: 0.3s;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    transition: background-color 0.3s ease;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 450px;
+    background-color: var(--card-color);
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transform: translateY(0);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+  }
+
+  .container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+  }
+
+  .form-header {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .form-header h1 {
+    font-size: 24px;
+    margin-bottom: 8px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .form-header p {
+    font-size: 14px;
+    opacity: 0.9;
+    position: relative;
+    z-index: 1;
+  }
+
+  .form-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+    transform: rotate(45deg);
+    animation: shimmer 3s infinite linear;
+  }
+
+  @keyframes shimmer {
+    0% { transform: translateX(-50%) rotate(45deg); }
+    100% { transform: translateX(50%) rotate(45deg); }
+  }
+
+  .form-body {
+    padding: 30px;
+  }
+
+  .form-group {
+    margin-bottom: 24px;
+    position: relative;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--light-text);
+    font-size: 14px;
+    transition: color var(--animation-duration) ease;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 16px;
+    border: 2px solid #E0E0E0;
+    border-radius: 6px;
+    transition: all var(--animation-duration) ease;
+    outline: none;
+  }
+
+  .form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px var(--primary-light);
+  }
+
+  .form-control:focus + label {
+    color: var(--primary-color);
+  }
+
+  .btn {
+    width: 100%;
+    padding: 14px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--animation-duration) ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .btn .btn-wave {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transform: scale(0);
+    animation: ripple 0.6s linear;
+    pointer-events: none;
+  }
+
+  @keyframes ripple {
+    to {
+      transform: scale(4);
+      opacity: 0;
+    }
+  }
+
+  .btn-loading .spinner {
+    display: inline-block;
+    margin-right: 8px;
+  }
+
+  .spinner {
+    width: 18px;
+    height: 18px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s ease-in-out infinite;
+    display: none;
+    vertical-align: middle;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .message {
+    margin-top: 20px;
+    padding: 12px;
+    border-radius: 6px;
+    text-align: center;
+    font-size: 14px;
+    transition: all var(--animation-duration) ease;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+  }
+
+  .message.show {
+    max-height: 200px;
+    opacity: 1;
+    padding: 12px;
+    margin-top: 20px;
+  }
+
+  .message.success {
+    background-color: #E8F5E9;
+    color: var(--success-color);
+  }
+
+  .message.error {
+    background-color: #FFEBEE;
+    color: var(--danger-color);
+  }
+
+  .message.info {
+    background-color: #E3F2FD;
+    color: #1976D2;
+  }
+
+  .mpesa-logo {
+    display: block;
+    width: 80px;
+    height: auto;
+    margin: 0 auto 15px;
+  }
+
+  /* Responsive styles */
+  @media (max-width: 480px) {
+    .container {
+      border-radius: 8px;
+    }
+    
+    .form-header {
+      padding: 15px;
+    }
+    
+    .form-header h1 {
+      font-size: 20px;
+    }
+    
+    .form-body {
+      padding: 20px;
+    }
+    
+    .form-control, .btn {
+      padding: 12px;
+      font-size: 14px;
+    }
+  }

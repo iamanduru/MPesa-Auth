@@ -10,11 +10,11 @@ router.post("/stkpush", async (req, res) => {
 
     //Ensure phone number is correct
     if (!/^2547\d{8}$/.test(phoneNumber)) {
-        return res.status(400).json({ error: "Invalide phone number format. Use 2547XXXXXXXX"});
+        return res.status(400).json({ error: "Invalid phone number format. Use 2547XXXXXXXX"});
     }
 
     if (!amount || isNaN(amount) || amount <= 0) {
-        return res.status(400).json({ error: "Invalide Amount. Must be a positive number!"});
+        return res.status(400).json({ error: "Invalid Amount. Must be a positive number!"});
     }
 
     try {
