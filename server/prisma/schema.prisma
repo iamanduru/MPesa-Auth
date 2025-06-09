@@ -1,0 +1,67 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+model User {
+  id           String       @id @default(uuid())
+  phoneNumber  String       @unique
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  payments     Payment[]
+  accessLinks  AccessLink[]
+}
+
+model Payment {
+  id            String         @id @default(uuid())
+  mpesaReceipt  String         @unique
+  amount        Decimal        @db.Decimal(10, 2)
+  phoneNumber   String
+  status        PaymentStatus  @default(PENDING)
+  paidAt        DateTime       @default(now())
+
+  // each payment belongs to a user
+  user          User           @relation(fields: [userId], references: [id])
+  userId        String
+
+  // back-relation for the one-to-one
+  accessLink    AccessLink?
+}
+
+model AccessLink {
+  id          String    @id @default(uuid())
+  urlToken    String    @unique
+  expiresAt   DateTime
+  deviceIP    String
+  isUsed      Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+
+  user        User      @relation(fields: [userId], references: [id])
+  userId      String
+
+  payment     Payment   @relation(fields: [paymentId], references: [id])
+  paymentId   String    @unique
+}
+
+model Otp {
+  id           String   @id @default(uuid())
+  phoneNumber  String   // ties it to a user (or prospective user)
+  codeHash     String   // bcrypt-hash of the numeric code
+  expiresAt    DateTime // e.g. now() + 5 minutes
+  used         Boolean  @default(false)
+  attempts     Int      @default(0) 
+  createdAt    DateTime @default(now())
+
+  @@index([phoneNumber])
+}
