@@ -1,4 +1,3 @@
-
 import express from 'express';
 import dotenv from 'dotenv';
 import helmet from 'helmet';
@@ -7,6 +6,7 @@ import morgan from 'morgan';
 
 import authRouter from './routes/auth.routes.js';
 import paymentRouter from './routes/payment.route.js';
+import webhookRouter from './routes/webhook.routes.js'
 import { authenticateJWT, verifyAccessLink } from './middleware/auth.middleware.js.js';
 
 
@@ -22,6 +22,7 @@ app.use(express.json());
 
 app.use('/auth', authRouter);
 app.use('/payment', authenticateJWT, paymentRouter);
+app.use('/webhook', webhookRouter);
 
 
 app.get('/', (_req, res) => {

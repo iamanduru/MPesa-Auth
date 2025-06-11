@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-
+import { stkPush, queryStkStatus } from '../services/mpesa.service.js';
 
 const prisma = new PrismaClient();
 
