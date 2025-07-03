@@ -25,6 +25,7 @@ app.use('/payment', authenticateJWT, paymentRouter);
 app.use('/webhook', webhookRouter);
 
 
+
 app.get('/', (_req, res) => {
   res.send('Film-Streaming M-Pesa Auth API is up and running');
 });

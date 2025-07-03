@@ -1,45 +1,13 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>M-Pesa Payment</title>
-    <link rel="stylesheet" href="index.css">
-</head>
-<body>
-    <div class="container">
-        <div class="form-header">
-          <svg class="mpesa-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 60">
-            <rect width="100" height="60" rx="10" fill="#fff"/>
-            <path d="M20 15h60v30H20z" fill="#4CAF50"/>
-            <text x="50" y="35" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle" fill="#fff">M-PESA</text>
-          </svg>
-          <h1>M-Pesa Payment</h1>
-          <p>Fast, secure mobile money transfer</p>
-        </div>
-        
-        <div class="form-body">
-          <form id="mpesa-form">
-            <div class="form-group">
-              <label for="phone">Phone Number</label>
-              <input type="tel" id="phone" class="form-control" placeholder="e.g., 254712345678" required pattern="^2547\d{8}$|^07\d{8}$">
-            </div>
-            
-            <div class="form-group">
-              <label for="amount">Amount (KSh)</label>
-              <input type="number" id="amount" class="form-control" placeholder="Enter amount" min="1" required>
-            </div>
-            
-            <button type="submit" id="submit-btn" class="btn">
-              <span class="spinner"></span>
-              <span class="btn-text">Pay Now</span>
-            </button>
-          </form>
-          
-          <div id="message" class="message">Processing payment...</div>
-        </div>
-      </div>
-
-    <script src="index.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + React</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>
