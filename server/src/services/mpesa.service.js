@@ -1,9 +1,11 @@
+import dotenv from 'dotenv';
 import axios from 'axios';
-import base64 from 'base-64';
 
+// Load environment variables from .env file
+dotenv.config();
 
 const {
-  MPESA_ENV,
+  MPESA_ENV = 'sandbox',
   MPESA_CONSUMER_KEY,
   MPESA_CONSUMER_SECRET,
   MPESA_SHORTCODE,
@@ -11,76 +13,105 @@ const {
   MPESA_CALLBACK_URL
 } = process.env;
 
-const urls = {
+// Check required env vars and provide a clear message
+const missing = [];
+if (!MPESA_CONSUMER_KEY)     missing.push('MPESA_CONSUMER_KEY');
+if (!MPESA_CONSUMER_SECRET)  missing.push('MPESA_CONSUMER_SECRET');
+if (!MPESA_SHORTCODE)        missing.push('MPESA_SHORTCODE');
+if (!MPESA_PASSKEY)          missing.push('MPESA_PASSKEY');
+if (!MPESA_CALLBACK_URL)     missing.push('MPESA_CALLBACK_URL');
+if (missing.length) {
+  console.warn(`Missing MPESA env vars: ${missing.join(', ')}. Falling back to sandbox defaults where possible.`);
+}
+
+// Daraja API endpoints
+const endpoints = {
   sandbox: {
-    oauth: 'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials',
-    stkPush: 'https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest',
+    oauth:    'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials',
+    stkPush:  'https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest',
     stkQuery: 'https://sandbox.safaricom.co.ke/mpesa/stkpushquery/v1/query'
   },
   production: {
-    oauth: 'https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials',
-    stkPush: 'https://api.safaricom.co.ke/mpesa/stkpush/v1/processrequest',
+    oauth:    'https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials',
+    stkPush:  'https://api.safaricom.co.ke/mpesa/stkpush/v1/processrequest',
     stkQuery: 'https://api.safaricom.co.ke/mpesa/stkpushquery/v1/query'
   }
-}[MPESA_ENV || 'sandbox'];
+};
+const urls = endpoints[MPESA_ENV] || endpoints.sandbox;
 
+// Obtain OAuth token
 async function getAccessToken() {
-  const creds = base64.encode(`${MPESA_CONSUMER_KEY}:${MPESA_CONSUMER_SECRET}`);
+  const key    = MPESA_CONSUMER_KEY;
+  const secret = MPESA_CONSUMER_SECRET;
+  if (!key || !secret) {
+    throw new Error('MPESA credentials are not set');
+  }
+  const basic = Buffer.from(`${key}:${secret}`).toString('base64');
   const { data } = await axios.get(urls.oauth, {
-    headers: { Authorization: `Basic ${creds}` }
+    headers: { Authorization: `Basic ${basic}` }
   });
+  if (!data.access_token) {
+    throw new Error('Failed to obtain MPESA access token');
+  }
   return data.access_token;
 }
 
-export async function stkPush(phoneNumber, amount) {
-    const token = await getAccessToken();
-    const timestamp = new Date().toISOString().replace(/[-:TZ]/g, '').slice(0,14);
-    const password = base64.encode(`${MPESA_SHORTCODE}${MPESA_PASSKEY}${timestamp}`);
-
-    const payload = {
-        BusinessShortCode: MPESA_SHORTCODE,
-        Password: password,
-        Timestamp: timestamp,
-        TransactionType: 'CustomerPayBillOnline',
-        Amount: amount,
-        PartyA: phoneNumber,
-        PartyB: MPESA_SHORTCODE,
-        PhoneNumber: phoneNumber,
-        CallBackURL: MPESA_CALLBACK_URL,
-        AccountReference: 'FilmStream',
-        TransactionDesc: 'Pay for film access'
-    };
-
-    const { data } = await axios.post(urls.stkPush, payload, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    });
-
-    return {
-        MerchantRequestID: data.MerchantRequestID,
-        CheckoutRequestID: data.CheckoutRequestID
-    };
+// Helpers
+function getTimestamp() {
+  return new Date().toISOString().replace(/[-:TZ]/g, '').slice(0, 14);
+}
+function getPassword(timestamp) {
+  return Buffer.from(`${MPESA_SHORTCODE}${MPESA_PASSKEY}${timestamp}`).toString('base64');
 }
 
+/**
+ * Initiate an STK push
+ */
+export async function stkPush(phoneNumber, amount, accountRef, description) {
+  const token     = await getAccessToken();
+  const timestamp = getTimestamp();
+  const password  = getPassword(timestamp);
 
-export async function  queryStkStatus(checkoutRequestID) {
-    const token = await getAccessToken();
-    const timestamp = new Date().toISOString().replace(/[-:TZ]/g, '').slice(0,14);
-    const password = base64.encode(`${MPESA_SHORTCODE}${MPESA_PASSKEY}${timestamp}`);
-    
-    const payload = {
-        BusinessShortCode: MPESA_SHORTCODE,
-        Password: password,
-        Timestamp: timestamp,
-        CheckoutRequestID: checkoutRequestID
-    };
+  const payload = {
+    BusinessShortCode: MPESA_SHORTCODE,
+    Password:          password,
+    Timestamp:         timestamp,
+    TransactionType:   'CustomerPayBillOnline',
+    Amount:            amount,
+    PartyA:            phoneNumber,
+    PartyB:            MPESA_SHORTCODE,
+    PhoneNumber:       phoneNumber,
+    CallBackURL:       MPESA_CALLBACK_URL,
+    AccountReference:  accountRef,
+    TransactionDesc:   description
+  };
 
-    const { data } = await axios.post(urls.stkQuery, payload, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    });
+  const response = await axios.post(urls.stkPush, payload, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return {
+    MerchantRequestID: response.data.MerchantRequestID,
+    CheckoutRequestID: response.data.CheckoutRequestID
+  };
+}
 
-    return data;
+/**
+ * Query STK push status
+ */
+export async function queryStkStatus(checkoutRequestID) {
+  const token     = await getAccessToken();
+  const timestamp = getTimestamp();
+  const password  = getPassword(timestamp);
+
+  const payload = {
+    BusinessShortCode: MPESA_SHORTCODE,
+    Password:          password,
+    Timestamp:         timestamp,
+    CheckoutRequestID: checkoutRequestID
+  };
+
+  const response = await axios.post(urls.stkQuery, payload, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
 }

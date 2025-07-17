@@ -1,18 +1,39 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from '@prisma/client';
 
-const prismaFraud = new PrismaClient();
+const prisma = new PrismaClient();
 
-export async function isIpMismatch(linkId, requestIP) {
-    const link = await prismaFraud.accessLink.findUnique({
-        where: { id: linkId }
-    });
-    if(!link) return true;
-    return link.deviceIP !== requestIP;
+/**
+ * Checks if an access link is invalid due to:
+ *  - non-existence
+ *  - already used
+ *  - expired
+ *  - IP mismatch
+ * @param {string} urlToken  the one-time link token
+ * @param {string} requestIP the incoming request IP
+ * @returns {Promise<boolean>} true if invalid (should be rejected)
+ */
+export async function isLinkInvalid(urlToken, requestIP) {
+  try {
+    const link = await prisma.accessLink.findUnique({ where: { urlToken } });
+    if (!link) return true;                      // no such link
+    if (link.isUsed) return true;                // already consumed
+    if (link.expiresAt <= new Date()) return true;// expired
+    return link.deviceIP !== requestIP;          // IP mismatch
+  } catch (err) {
+    console.error('fraud.service.isLinkInvalid error:', err);
+    // on DB error, treat as invalid
+    return true;
+  }
 }
 
-export async function revikeLink(linkId) {
-    return prismaFraud.accessLink.update({
-        where: { id: linkId },
-        data: { isUsed: true }
-    });
+/**
+ * Revokes an access link by marking it used and expiring it immediately.
+ * @param {string} urlToken  the one-time link token
+ * @returns {Promise<import('@prisma/client').AccessLink>}
+ */
+export async function revokeLink(urlToken) {
+  return prisma.accessLink.update({
+    where: { urlToken },
+    data: { isUsed: true, expiresAt: new Date() }
+  });
 }
