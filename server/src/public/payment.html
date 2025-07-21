@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Pay for Film</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo"></div>
+    <h1>Mission Possible Production</h1>
+  </nav>
+  <main class="container">
+    <h2 id="title" class="loading__dots">Loading</h2>
+    <p id="price"></p>
+    <label>
+      M-Pesa Number:
+      <input type="text" id="phone" placeholder="2547XXXXXXXX">
+    </label>
+    <button id="payBtn">Pay with M-Pesa</button>
+    <p id="message" class="message"></p>
+  </main>
+  <script src="./payment.js"></script>
+</body>
+</html>

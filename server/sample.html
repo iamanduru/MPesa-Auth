@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pay for Film - Mission Possible Production</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary-color: #1a1a2e;
+      --secondary-color: #16213e;
+      --accent-color: #0f4c75;
+      --highlight-color: #3282b8;
+      --success-color: #00c851;
+      --error-color: #ff4444;
+      --text-light: #ffffff;
+      --text-muted: #b8c4ce;
+      --border-color: #2d3748;
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      --border-radius: 16px;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 50%, var(--accent-color) 100%);
+      min-height: 100vh;
+      color: var(--text-light);
+      overflow-x: hidden;
+    }
+
+    /* Animated background particles */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        radial-gradient(circle at 20% 80%, rgba(50, 130, 184, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(15, 76, 117, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(26, 26, 46, 0.1) 0%, transparent 50%);
+      animation: floatBackground 20s ease-in-out infinite;
+      z-index: -1;
+    }
+
+    @keyframes floatBackground {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(1deg); }
+    }
+
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem 2rem;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      animation: slideDown 0.8s ease-out;
+    }
+
+    @keyframes slideDown {
+      from {
+        transform: translateY(-100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .logo {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--highlight-color), var(--accent-color));
+      margin-right: 1rem;
+      animation: pulse 2s ease-in-out infinite;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+
+    .logo::after {
+      content: 'MP';
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .navbar h1 {
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--text-light), var(--highlight-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-align: center;
+      animation: glow 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+      from { filter: brightness(1); }
+      to { filter: brightness(1.2); }
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 2rem auto;
+      padding: 3rem;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(30px);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      animation: fadeInUp 1s ease-out 0.3s both;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--highlight-color), transparent);
+      animation: shimmer 2s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        transform: translateY(30px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    #title {
+      font-size: clamp(1.8rem, 5vw, 2.5rem);
+      font-weight: 700;
+      margin-bottom: 1rem;
+      text-align: center;
+      background: linear-gradient(135deg, var(--text-light), var(--highlight-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: typewriter 2s ease-out 1s both;
+    }
+
+    @keyframes typewriter {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+
+    #price {
+      font-size: 1.5rem;
+      font-weight: 600;
+      text-align: center;
+      color: var(--highlight-color);
+      margin-bottom: 2rem;
+      animation: bounce 1s ease-out 1.5s both;
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-10px); }
+      60% { transform: translateY(-5px); }
+    }
+
+    label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      animation: fadeIn 1s ease-out 2s both;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    #phone {
+      width: 100%;
+      padding: 1rem 1.25rem;
+      font-size: 1rem;
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-light);
+      margin-bottom: 2rem;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      animation: slideInLeft 0.8s ease-out 2.2s both;
+    }
+
+    @keyframes slideInLeft {
+      from {
+        transform: translateX(-30px);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    #phone:focus {
+      outline: none;
+      border-color: var(--highlight-color);
+      box-shadow: 0 0 0 3px rgba(50, 130, 184, 0.2);
+      transform: translateY(-2px);
+    }
+
+    #phone::placeholder {
+      color: var(--text-muted);
+    }
+
+    #payBtn {
+      width: 100%;
+      padding: 1.25rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      background: linear-gradient(135deg, var(--highlight-color), var(--accent-color));
+      color: var(--text-light);
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      animation: slideInRight 0.8s ease-out 2.4s both;
+      box-shadow: 0 10px 30px rgba(50, 130, 184, 0.3);
+    }
+
+    @keyframes slideInRight {
+      from {
+        transform: translateX(30px);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    #payBtn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s ease;
+    }
+
+    #payBtn:hover::before {
+      left: 100%;
+    }
+
+    #payBtn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 40px rgba(50, 130, 184, 0.4);
+    }
+
+    #payBtn:active {
+      transform: translateY(-1px);
+    }
+
+    #payBtn.loading {
+      animation: pulse 1s ease-in-out infinite;
+      cursor: not-allowed;
+    }
+
+    #payBtn.loading::after {
+      content: '';
+      width: 20px;
+      height: 20px;
+      border: 2px solid transparent;
+      border-top: 2px solid var(--text-light);
+      border-radius: 50%;
+      display: inline-block;
+      margin-left: 10px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .message {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: 500;
+      transform: translateY(20px);
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    .message.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .message.success {
+      background: rgba(0, 200, 81, 0.1);
+      color: var(--success-color);
+      border: 1px solid rgba(0, 200, 81, 0.2);
+    }
+
+    .message.error {
+      background: rgba(255, 68, 68, 0.1);
+      color: var(--error-color);
+      border: 1px solid rgba(255, 68, 68, 0.2);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 1rem;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .logo {
+        width: 40px;
+        height: 40px;
+        margin-right: 0;
+        margin-bottom: 0.5rem;
+      }
+
+      .container {
+        margin: 1rem;
+        padding: 2rem 1.5rem;
+      }
+
+      #title {
+        font-size: 1.8rem;
+      }
+
+      #price {
+        font-size: 1.3rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .navbar {
+        padding: 0.75rem;
+      }
+
+      .navbar h1 {
+        font-size: 1.3rem;
+      }
+
+      .container {
+        margin: 0.5rem;
+        padding: 1.5rem 1rem;
+      }
+
+      #title {
+        font-size: 1.5rem;
+      }
+
+      #phone, #payBtn {
+        padding: 1rem;
+      }
+    }
+
+    /* Loading dots animation */
+    .loading-dots::after {
+      content: '';
+      animation: loadingDots 1.5s infinite;
+    }
+
+    @keyframes loadingDots {
+      0%, 20% { content: ''; }
+      40% { content: '.'; }
+      60% { content: '..'; }
+      80%, 100% { content: '...'; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo"></div>
+    <h1>Mission Possible Production</h1>
+  </nav>
+  <main class="container">
+    <h2 id="title" class="loading-dots">Loading</h2>
+    <p id="price"></p>
+    <label>
+      Phone (2547XXXXXXXX):
+      <input type="text" id="phone" placeholder="2547XXXXXXXX"/>
+    </label>
+    <button id="payBtn">Pay with M‑Pesa</button>
+    <p id="message" class="message"></p>
+  </main>
+
+  <script>
+    // Film data simulation
+    const filmData = {
+      title: "Mission Impossible: Dead Reckoning",
+      price: "KES 500",
+      duration: "2h 43min",
+      genre: "Action/Thriller"
+    };
+
+    // DOM elements
+    const titleElement = document.getElementById('title');
+    const priceElement = document.getElementById('price');
+    const phoneInput = document.getElementById('phone');
+    const payBtn = document.getElementById('payBtn');
+    const messageElement = document.getElementById('message');
+
+    // Initialize page
+    function initializePage() {
+      setTimeout(() => {
+        titleElement.textContent = filmData.title;
+        titleElement.classList.remove('loading-dots');
+        priceElement.textContent = `${filmData.price} • ${filmData.duration} • ${filmData.genre}`;
+        
+        // Add entrance animations
+        titleElement.style.animation = 'fadeInUp 0.8s ease-out forwards';
+        priceElement.style.animation = 'bounce 1s ease-out 0.3s both';
+      }, 2000);
+    }
+
+    // Phone number formatting
+    phoneInput.addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      
+      // Ensure it starts with 254
+      if (value.length > 0 && !value.startsWith('254')) {
+        if (value.startsWith('7') || value.startsWith('1')) {
+          value = '254' + value;
+        }
+      }
+      
+      // Limit to 12 digits (254 + 9 digits)
+      if (value.length > 12) {
+        value = value.substring(0, 12);
+      }
+      
+      e.target.value = value;
+      
+      // Add visual feedback
+      if (value.length === 12) {
+        e.target.style.borderColor = 'var(--success-color)';
+        e.target.style.boxShadow = '0 0 0 3px rgba(0, 200, 81, 0.2)';
+      } else {
+        e.target.style.borderColor = 'var(--border-color)';
+        e.target.style.boxShadow = 'none';
+      }
+    });
+
+    // Payment processing
+    payBtn.addEventListener('click', function() {
+      const phoneNumber = phoneInput.value.trim();
+      
+      // Validation
+      if (!phoneNumber) {
+        showMessage('Please enter your phone number', 'error');
+        phoneInput.focus();
+        return;
+      }
+      
+      if (phoneNumber.length !== 12 || !phoneNumber.startsWith('254')) {
+        showMessage('Please enter a valid Kenyan phone number (254XXXXXXXXX)', 'error');
+        phoneInput.focus();
+        return;
+      }
+      
+      // Start payment process
+      startPayment(phoneNumber);
+    });
+
+    function startPayment(phoneNumber) {
+      // Disable button and show loading
+      payBtn.disabled = true;
+      payBtn.classList.add('loading');
+      payBtn.textContent = 'Processing Payment';
+      
+      showMessage('Initiating M-Pesa payment...', 'info');
+      
+      // Simulate payment process
+      setTimeout(() => {
+        showMessage('Payment request sent to your phone. Please check your M-Pesa notifications.', 'info');
+        
+        setTimeout(() => {
+          // Simulate random success/failure for demo
+          const isSuccess = Math.random() > 0.3;
+          
+          if (isSuccess) {
+            showMessage('✅ Payment successful! You can now access the film. Check your email for details.', 'success');
+            payBtn.textContent = '✅ Payment Complete';
+            payBtn.style.background = 'var(--success-color)';
+            
+            // Add success animation
+            document.querySelector('.container').style.animation = 'pulse 0.5s ease-in-out';
+            
+          } else {
+            showMessage('❌ Payment failed. Please try again or contact support.', 'error');
+            payBtn.disabled = false;
+            payBtn.classList.remove('loading');
+            payBtn.textContent = 'Retry Payment';
+          }
+        }, 3000);
+      }, 1500);
+    }
+
+    function showMessage(text, type) {
+      messageElement.textContent = text;
+      messageElement.className = `message ${type} show`;
+      
+      // Auto-hide info messages after 5 seconds
+      if (type === 'info') {
+        setTimeout(() => {
+          messageElement.classList.remove('show');
+        }, 5000);
+      }
+    }
+
+    // Add floating animation to payment button
+    setInterval(() => {
+      if (!payBtn.disabled && !payBtn.classList.contains('loading')) {
+        payBtn.style.animation = 'bounce 0.6s ease-in-out';
+        setTimeout(() => {
+          payBtn.style.animation = '';
+        }, 600);
+      }
+    }, 5000);
+
+    // Add particles effect on successful payment
+    function createParticles() {
+      for (let i = 0; i < 20; i++) {
+        const particle = document.createElement('div');
+        particle.style.cssText = `
+          position: fixed;
+          width: 6px;
+          height: 6px;
+          background: var(--success-color);
+          border-radius: 50%;
+          pointer-events: none;
+          left: 50%;
+          top: 50%;
+          animation: particle-explosion 2s ease-out forwards;
+          animation-delay: ${Math.random() * 0.5}s;
+        `;
+        
+        const angle = (Math.PI * 2 * i) / 20;
+        const distance = 100 + Math.random() * 100;
+        
+        particle.style.setProperty('--end-x', Math.cos(angle) * distance + 'px');
+        particle.style.setProperty('--end-y', Math.sin(angle) * distance + 'px');
+        
+        document.body.appendChild(particle);
+        
+        setTimeout(() => particle.remove(), 2000);
+      }
+    }
+
+    // Add particle animation CSS
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes particle-explosion {
+        to {
+          transform: translate(var(--end-x), var(--end-y));
+          opacity: 0;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+
+    // Initialize the page
+    initializePage();
+
+    // Add enter key support for payment
+    phoneInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        payBtn.click();
+      }
+    });
+  </script>
+</body>
+</html>

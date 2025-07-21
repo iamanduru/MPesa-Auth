@@ -24,6 +24,9 @@ app.use(morgan('combined'));
 app.use(express.json());
 app.use(cookieParser());
 
+// serve static front‑end:
+app.use(express.static(path.join(process.cwd(), 'public')));
+
 // Swagger/OpenAPI setup
 const swaggerSpec = swaggerJsdoc({
   definition: {
