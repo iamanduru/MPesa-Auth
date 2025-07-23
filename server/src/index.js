@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import cors from 'cors';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
+import path from 'path';                // ← import Node’s path module
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 
@@ -24,7 +25,7 @@ app.use(morgan('combined'));
 app.use(express.json());
 app.use(cookieParser());
 
-// serve static front‑end:
+// Serve your frontend from /public
 app.use(express.static(path.join(process.cwd(), 'public')));
 
 // Swagger/OpenAPI setup
@@ -49,7 +50,7 @@ const swaggerSpec = swaggerJsdoc({
       }
     }
   },
-  apis: ['./src/routes/*.js', './src/controllers/*.js'], // Updated paths
+  apis: ['./src/routes/*.js', './src/controllers/*.js'],
 });
 
 // Serve Swagger UI at /api-docs
@@ -78,9 +79,12 @@ app.get('/', (_req, res) => {
  *         schema:
  *           type: string
  *     responses:
- *       '200': description: MP4 chunk stream
- *       '400': description: Missing filmId
- *       '401': description: Unauthorized or invalid access link
+ *       '200':
+ *         description: MP4 chunk stream
+ *       '400':
+ *         description: Missing filmId
+ *       '401':
+ *         description: Unauthorized or invalid access link
  */
 app.get('/stream', verifyAccessLink, (req, res) => {
   const { filmId } = req.query;
@@ -95,7 +99,7 @@ app.get('/stream', verifyAccessLink, (req, res) => {
   });
 });
 
-// Error handler
+// Global error handler
 app.use((err, _req, res, _next) => {
   console.error(err);
   res.status(500).json({ error: 'Internal server error' });

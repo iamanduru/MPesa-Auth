@@ -254,16 +254,7 @@ label {
   box-shadow: 0 10px 30px rgba(50, 130, 184, 0.3);
 }
 
-@keyframes slideInRight {
-  from {
-    transform: translateX(30px);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
+
 
 #payBtn::before {
   content: '';

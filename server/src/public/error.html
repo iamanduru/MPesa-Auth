@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Access Denied</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1a1a2e;
+            --secondary-color: #16213e;
+            --accent-color: #0f4c75;
+            --highlight-color: #3282b8;
+            --success-color: #00c851;
+            --error-color: #ff4444;
+            --text-light: #ffffff;
+            --text-muted: #b8c4ce;
+            --border-color: #2d3748;
+            --shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            --border-radius: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Inter", sans-serif;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 50%, var(--accent-color) 100%);
+            min-height: 100vh;
+            color: var(--text-light);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated background particles */
+        .bg-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(50, 130, 184, 0.1);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .particle:nth-child(1) { width: 80px; height: 80px; top: 20%; left: 10%; animation-delay: 0s; }
+        .particle:nth-child(2) { width: 60px; height: 60px; top: 60%; left: 80%; animation-delay: 2s; }
+        .particle:nth-child(3) { width: 40px; height: 40px; top: 80%; left: 20%; animation-delay: 4s; }
+        .particle:nth-child(4) { width: 100px; height: 100px; top: 30%; left: 70%; animation-delay: 1s; }
+        .particle:nth-child(5) { width: 50px; height: 50px; top: 70%; left: 50%; animation-delay: 3s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.7; }
+            50% { transform: translateY(-20px) rotate(180deg); opacity: 0.3; }
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .error-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            padding: 3rem 2.5rem;
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        .error-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--highlight-color), transparent);
+            animation: shimmer 2s ease-in-out infinite;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .error-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(135deg, var(--error-color), #ff6b6b);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s ease-in-out infinite;
+            box-shadow: 0 0 30px rgba(255, 68, 68, 0.3);
+        }
+
+        .error-icon::before {
+            content: '⚠';
+            font-size: 2.5rem;
+            color: white;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 30px rgba(255, 68, 68, 0.3); }
+            50% { transform: scale(1.05); box-shadow: 0 0 40px rgba(255, 68, 68, 0.5); }
+        }
+
+        .error-title {
+            font-family: "Playfair Display", serif;
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--text-light), var(--text-muted));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInTitle 1s ease-out 0.3s both;
+        }
+
+        @keyframes fadeInTitle {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .error-message {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 2.5rem;
+            line-height: 1.6;
+            animation: fadeInMessage 1s ease-out 0.5s both;
+        }
+
+        @keyframes fadeInMessage {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: linear-gradient(135deg, var(--highlight-color), var(--accent-color));
+            color: var(--text-light);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            animation: fadeInButton 1s ease-out 0.7s both;
+            box-shadow: 0 10px 30px rgba(50, 130, 184, 0.3);
+        }
+
+        .back-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .back-button:hover::before {
+            left: 100%;
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(50, 130, 184, 0.4);
+        }
+
+        @keyframes fadeInButton {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .error-card {
+                padding: 2rem 1.5rem;
+                margin: 1rem;
+            }
+            
+            .error-title {
+                font-size: 2.5rem;
+            }
+            
+            .error-message {
+                font-size: 1.1rem;
+            }
+            
+            .back-button {
+                padding: 0.875rem 2rem;
+                font-size: 1rem;
+            }
+        }
+
+        /* Additional visual enhancements */
+        .glitch-text {
+            position: relative;
+            animation: glitch 3s ease-in-out infinite;
+        }
+
+        @keyframes glitch {
+            0%, 100% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+        }
+
+        .status-indicator {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 20px;
+            height: 20px;
+            background: var(--error-color);
+            border-radius: 50%;
+            animation: blink 1.5s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.3; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+    
+    <div class="container">
+        <div class="error-card">
+            <div class="status-indicator"></div>
+            <div class="error-icon"></div>
+            <h2 class="error-title glitch-text">Oops!</h2>
+            <p class="error-message">This link cannot be shared or has expired.</p>
+            <a href="payment.html" class="back-button">← Go back to payment</a>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced error handling with visual feedback
+        (async function(){
+            const params = new URLSearchParams(location.search);
+            const token = params.get('token');
+            const filmId = params.get('filmId');
+            
+            if (!token || !filmId) {
+                // Add subtle animation to indicate error processing
+                document.querySelector('.error-card').style.animation = 'slideUp 0.8s ease-out, pulse 0.5s ease-in-out 1.5s';
+                return;
+            }
+            
+            try {
+                // Attempt to load video stream from your API
+                const res = await fetch(`/stream?token=${token}&filmId=${filmId}`);
+                if (!res.ok) throw new Error('Link invalid or expired');
+                
+                // Your server should respond with sendFile MP4 or a redirect to CDN
+                const blob = await res.blob();
+                document.getElementById('videoPlayer').src = URL.createObjectURL(blob);
+            } catch (e) {
+                console.error(e);
+                // Add loading state before redirect
+                document.querySelector('.back-button').textContent = 'Redirecting...';
+                setTimeout(() => {
+                    location.href = 'error.html';
+                }, 1000);
+            }
+        })();
+
+        // Add interactive particle effects on mouse move
+        document.addEventListener('mousemove', (e) => {
+            const particles = document.querySelectorAll('.particle');
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            particles.forEach((particle, index) => {
+                const speed = (index + 1) * 0.5;
+                const xOffset = (x - 0.5) * 20 * speed;
+                const yOffset = (y - 0.5) * 20 * speed;
+                
+                particle.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+            });
+        });
+    </script>
+</body>
+</html>

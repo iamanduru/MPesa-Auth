@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Watch Film • Mission Possible Production</title>
+  <style>
+    /* minimal reset & dark background */
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      background:#000;
+      color:#fff;
+      font-family: 'Segoe UI', sans-serif;
+      display:flex;
+      flex-direction:column;
+      min-height:100vh;
+    }
+    .navbar {
+      padding:1rem;
+      background:rgba(255,255,255,0.05);
+      text-align:center;
+      position:sticky;
+      top:0;
+      z-index:10;
+    }
+    main {
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      padding:1rem;
+    }
+    video {
+      width:100%;
+      max-width:800px;
+      height:auto;
+      background:#000;
+      border:2px solid #3282b8;
+      border-radius:8px;
+    }
+    .message {
+      margin-top:1rem;
+      padding:1rem;
+      border-radius:8px;
+      background:rgba(255,68,68,0.1);
+      color:#ff4444;
+      display:none;
+      max-width:800px;
+      text-align:center;
+    }
+    .message.show { display:block; }
+  </style>
+</head>
+<body>
+  
+  <main>
+    <video id="videoPlayer" controls autoplay>
+      <!-- if browser can't play, fallback message: -->
+      Your browser does not support HTML5 video.
+    </video>
+    <div id="error" class="message"></div>
+  </main>
+
+  <script src=""></script>
+</body>
+</html>
